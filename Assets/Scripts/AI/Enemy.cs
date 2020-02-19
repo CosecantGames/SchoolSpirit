@@ -43,9 +43,9 @@ namespace Enemy {
         public KeyCode startLook = KeyCode.O;
         public KeyCode startLookPlr = KeyCode.P;
 
-        AIRoutine[] routineQueue;
-        LookAt lookAt;
-        LookAtPlayer lookAtPlayer;
+        public AIRoutine[] routineQueue;
+        public LookAt lookAt;
+        public LookAtPlayer lookAtPlayer;
 
         // Start is called before the first frame update
         void Start() {
@@ -68,8 +68,7 @@ namespace Enemy {
             if(Input.GetKeyDown(startLookPlr)) {
                 lookAtPlayer.Run();
             }
-
-
+            
             HandleState();
 
             switch(state) {
@@ -103,7 +102,7 @@ namespace Enemy {
 
             if(seesPlayer) {
                 state = EnemyStates.Chasing;
-                Look.visAngle = 45f;
+                Look.visAngle = 75f;
                 Look.visRange = 30f;
             } else {
                 state = EnemyStates.Patrolling;

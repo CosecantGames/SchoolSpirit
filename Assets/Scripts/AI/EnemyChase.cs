@@ -23,6 +23,7 @@ namespace Enemy {
         public void Chase() {
             if(me.state != me.lastState) {
                 me.SwapAgent(EnemyAgents.chaseAgent);
+                me.lookAtPlayer.Run(24f);
             }
 
             me.target = Global.Plr.transform;
