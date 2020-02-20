@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Enemy {
+    //This script deals with whether the enemy has the player in its line of sight
     public class EnemyLook : MonoBehaviour {
         Enemy me;
 

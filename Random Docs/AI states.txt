@@ -1,0 +1,28 @@
+Chasing plr:
+	Start chase timer
+	While in sight:
+		Increase chase timer
+	While lost sight:
+		Set state to Searching
+		Create search area (closest unobstructed node to player + its neighbors)
+		Patrol the search area:
+			Set patrol route to search area
+			Set routeIndex to 0 (the node closest to plr is added first, so 0 is always the closest to plr last seen)
+			If at node:
+				Do lookAround
+			If at last node (nodeIndex >= searchRoute.Count)
+				Set state to patrolling
+			If state times out (time based on chase time):
+				Set state to Looking
+				Look around
+
+Patrolling:
+	If sees plr:
+		Start suspicion timer
+	While sees plr:
+		Increase suspicion timer (goes up faster when plr is well-lit or closer to enemy)
+		If suspicion timer >= suspicion threshold:
+			Set state to Chasing
+	If doesn't see plr:
+		If suspicion timer >= search threshold:
+			Look around

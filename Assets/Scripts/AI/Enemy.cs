@@ -5,34 +5,38 @@ using UnityEngine.AI;
 
 namespace Enemy {
     public enum EnemyStates {
-        Patrolling,
-        Chasing,
-        Searching,
+        Chasing,    //Chasing = Directly following the player
+        Searching,  //Searching = Walking around where the player was last seen to find them
+        Looking,    //Looking = Rotating on the spot to find the player
+        Patrolling, //Patrolling = Moving along a patrol route
         Idle
     }
 
+    public enum RouteType {
+        Loop,
+        Line
+    }
+
     public class Enemy : MonoBehaviour {
-        public EnemyMove Move;
+        //public EnemyMove Move;
         public EnemyLook Look;
-        public EnemyPatrol Patrol;
-        public EnemyChase Chase;
+        //public EnemyPatrol Patrol;
+        //public EnemyChase Chase;
 
         public NavMeshAgent agent;
 
         public EnemyStates state;
-
-        //State during previous frame
-        public EnemyStates lastState;
+        public EnemyStates lastState;   //State during previous frame
 
         public bool seesPlayer = false;
 
         public Transform target;
 
         private void Awake() {
-            Move = GetComponent<EnemyMove>();
+            //Move = GetComponent<EnemyMove>();
             Look = GetComponent<EnemyLook>();
-            Patrol = GetComponent<EnemyPatrol>();
-            Chase = GetComponent<EnemyChase>();
+            //Patrol = GetComponent<EnemyPatrol>();
+            //Chase = GetComponent<EnemyChase>();
 
             agent = GetComponent<NavMeshAgent>();
 
@@ -43,6 +47,7 @@ namespace Enemy {
         public KeyCode startLook = KeyCode.O;
         public KeyCode startLookPlr = KeyCode.P;
 
+        [Header("AIRoutines")]
         public AIRoutine[] routineQueue;
         public LookAt lookAt;
         public LookAtPlayer lookAtPlayer;
@@ -72,13 +77,15 @@ namespace Enemy {
             HandleState();
 
             switch(state) {
-                case EnemyStates.Patrolling:
-                    Patrol.Patrol();
-                    break;
                 case EnemyStates.Chasing:
-                    Chase.Chase();
+                    Chase();
                     break;
                 case EnemyStates.Searching:
+                    break;
+                case EnemyStates.Looking:
+                    break;
+                case EnemyStates.Patrolling:
+                    Patrol();
                     break;
                 case EnemyStates.Idle:
                     break;
@@ -126,6 +133,47 @@ namespace Enemy {
             agent.acceleration = newAgent.acceleration;
             agent.stoppingDistance = newAgent.stoppingDistance;
             agent.autoBraking = newAgent.autoBraking;
+        }
+
+        public void Chase() {
+            if(state != lastState) {
+                SwapAgent(EnemyAgents.chaseAgent);
+                lookAtPlayer.Run(24f);
+            }
+
+            target = Global.Plr.transform;
+
+            agent.destination = target.position;
+        }
+
+        [Header("Patrol Settings")]
+
+        public List<Node> patrolRoute;
+        public RouteType routeType = RouteType.Loop;
+        public Node targetNode;
+        public int routeIndex = 0;
+
+        public float remainingDist = 0f;
+
+        public void Patrol() {
+            if(state != lastState) {
+                SwapAgent(EnemyAgents.patrolAgent);
+            }
+
+            if(patrolRoute.Count < 1) {
+                return;
+            }
+
+            remainingDist = transform.position.flatDistTo(target.position);
+
+            if(remainingDist <= 1) {
+                routeIndex = routeIndex < patrolRoute.Count - 1 ? routeIndex + 1 : 0;
+                targetNode = patrolRoute[routeIndex];
+            }
+
+            target = targetNode.transform;
+
+            agent.destination = target.position;
         }
     }
 }
