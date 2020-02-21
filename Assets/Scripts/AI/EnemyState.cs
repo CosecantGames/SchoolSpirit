@@ -20,38 +20,6 @@ namespace Enemy {
 
         }
 
-        public void Swap() {
-            switch(me.state) {
-                case EnemyStates.Patrolling:
-                    break;
-                case EnemyStates.Chasing:
-                    break;
-                case EnemyStates.Searching:
-                    break;
-                case EnemyStates.Idle:
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        public void Timeout() {
-            switch(me.state) {
-                case EnemyStates.Chasing:
-                    break;
-                case EnemyStates.Searching:
-                    me.state = EnemyStates.Looking;
-                    break;
-                case EnemyStates.Looking:
-                    me.state = EnemyStates.Patrolling;
-                    break;
-                case EnemyStates.Patrolling:
-                    break;
-                case EnemyStates.Idle:
-                    break;
-                default:
-                    break;
-            }
-        }
+        
     }
 }

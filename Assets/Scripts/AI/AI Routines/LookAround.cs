@@ -6,20 +6,42 @@ public class LookAround : AIRoutine {
     private void Awake() {
     }
 
-    public void Run(float turnSpeed = 8f, float turnAngle = 115f, float timeout = 8f) {
+    public void Run(float turnSpeed = 7.5f, float turnAngle = 125f, float timeout = Mathf.Infinity) {
         Run(Routine(turnSpeed, turnAngle, timeout));
     }
 
-    public IEnumerator Routine(float turnSpeed = 8f, float turnAngle = 115f, float timeout = Mathf.Infinity) {
+    public IEnumerator Routine(float turnSpeed = 7.5f, float turnAngle = 125f, float timeout = Mathf.Infinity) {
         isRunning = true;
 
         float timer = 0f;
         Quaternion startRotation = transform.rotation;
-        Quaternion leftRotation = startRotation;
-        Quaternion rightRotation = startRotation;
+        Quaternion leftRotation = Quaternion.Euler(0f, -turnAngle, 0f) * startRotation;
+        Quaternion rightRotation = Quaternion.Euler(0f, turnAngle, 0f) * startRotation;
+        Quaternion target = leftRotation;
+        Quaternion endTarget = leftRotation;
 
         while(timer < timeout) {
-            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(Global.Plr.transform.position - transform.position, transform.up), Time.deltaTime * turnSpeed);
+            timer += Time.deltaTime;
+
+            if(target == startRotation) {
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, target, turnSpeed);
+            } else {
+                transform.rotation = Quaternion.Lerp(transform.rotation, target, Time.deltaTime * turnSpeed);
+            }
+
+            float angleToTarget = Quaternion.Angle(transform.rotation, target);
+
+            if(angleToTarget <= 2) {
+                if(target == leftRotation) {
+                    target = startRotation;
+                    endTarget = rightRotation;
+                } else if(target == rightRotation) {
+                    target = startRotation;
+                    endTarget = leftRotation;
+                } else {
+                    target = endTarget;
+                }
+            }
 
             if(forceBreak) { break; }
 

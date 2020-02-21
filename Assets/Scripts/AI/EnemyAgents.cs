@@ -13,8 +13,8 @@ namespace Enemy {
          *  be pretty much anywhere.
          */
 
-        public static NavMeshAgent patrolAgent;
         public static NavMeshAgent chaseAgent;
+        public static NavMeshAgent patrolAgent;
         public static NavMeshAgent searchAgent;
         public static NavMeshAgent idleAgent;
 
