@@ -120,7 +120,7 @@ namespace Enemy {
         }
 
         public void SwapAgent(NavMeshAgent newAgent) {
-            Debug.Log("Swapping Agent to " + newAgent.name);
+            //Debug.Log("Swapping Agent to " + newAgent.name);
 
             agent.speed = newAgent.speed;
             agent.angularSpeed = newAgent.angularSpeed;
@@ -157,7 +157,6 @@ namespace Enemy {
                 stateSwapped = false;
 
                 List<Node> searchRoute;
-                Debug.Log(Global.Plr.transform.position);
                 lastPlayerPos = Global.Plr.transform.position;
                 agent.destination = lastPlayerPos;
             }
@@ -208,6 +207,7 @@ namespace Enemy {
             switch(state) {
                 case EnemyStates.Chasing:
                     lookAround.Kill();
+                    Debug.Log("LookAround killed");
 
                     lookAtPlayer.Run(45f);
                     SwapAgent(EnemyAgents.chaseAgent);
@@ -250,7 +250,8 @@ namespace Enemy {
                     SwapState(EnemyStates.Looking);
                     break;
                 case EnemyStates.Looking:
-                    lookAround.Kill();
+                    lookAround.Kill(true);
+                    Debug.Log("LookAround timed out");
                     SwapState(EnemyStates.Idle, 1.5f);
                     nextState = EnemyStates.Patrolling;
                     break;

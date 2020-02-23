@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class AIRoutine : MonoBehaviour {
-    //isRunning is ONLY change by the coroutine.
+    //isRunning is ONLY change by the coroutine or Kill().
     public bool isRunning = false;
 
     public string routineName = "Routine";
@@ -26,10 +26,14 @@ public class AIRoutine : MonoBehaviour {
     }
 
     public void Run() {
-        try {
-            routine = StartCoroutine(routineName);
-        } catch {
-            throw new BadRoutineName("Called routine does not exist.");
+        if(!isRunning) {
+            try {
+                routine = StartCoroutine(routineName);
+            } catch {
+                throw new BadRoutineName("Called routine does not exist.");
+            }
+        } else {
+            return;
         }
 
         Clock.startTime = Time.time;
