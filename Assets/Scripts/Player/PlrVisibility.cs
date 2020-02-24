@@ -26,7 +26,7 @@ namespace Player {
         // Update is called once per frame
         void Update() {
             FindLights();
-            visMeter.text = "Visibility: " + FormatVis() + "%";
+            visMeter.text = "Visibility: " + FormatVis() + "% (" + vis + ")";
 
             if(Input.GetKeyDown(KeyCode.T)) {
                 SeeTest();
@@ -65,9 +65,9 @@ namespace Player {
 
                 if(distToLight < light.range) {
                     if(distToLight == 0) {
-                        vis += 100;
+                        vis += 1;
                     } else {
-                        vis += (1 - (distToLight / light.range)) * 100;
+                        vis += (1 - (distToLight / light.range));
                     }
                 }
             }
