@@ -34,10 +34,8 @@ namespace Enemy {
         public Transform target;
 
         private void Awake() {
-            //Move = GetComponent<EnemyMove>();
+            routines = GetComponent<EnemyRoutines>();
             Look = GetComponent<EnemyLook>();
-            //Patrol = GetComponent<EnemyPatrol>();
-            //Chase = GetComponent<EnemyChase>();
 
             agent = GetComponent<NavMeshAgent>();
 
@@ -50,18 +48,13 @@ namespace Enemy {
 
         [Header("AIRoutines")]
         public AIRoutine[] routineQueue;
-        public LookAt lookAt;
-        public LookAtPlayer lookAtPlayer;
-        public LookAround lookAround;
+        public EnemyRoutines routines;
 
         public float stateTimer;
         bool stateSwapped = false;
 
         // Start is called before the first frame update
         void Start() {
-            lookAt = gameObject.AddComponent<LookAt>();
-            lookAtPlayer = gameObject.AddComponent<LookAtPlayer>();
-            lookAround = gameObject.AddComponent<LookAround>();
             target = transform;
         }
 
@@ -69,19 +62,17 @@ namespace Enemy {
         void Update() {
             if(Input.GetButtonDown("BigRedButton")) {
                 Debug.Log("PUSHED THE BIG RED BUTTON!!!");
-                lookAt.Kill();
-                lookAtPlayer.Kill();
-                lookAround.Kill();
+                routines.KillAll(true);
             }
 
             if(Input.GetKeyDown(startLook)) {
                 state = EnemyStates.Looking;
                 stateTimer = 6f;
-                lookAround.Run(6f, 130f, 6f);
+                routines.lookAround.Run(6f, 130f, 6f);
             }
 
             if(Input.GetKeyDown(startLookPlr)) {
-                lookAtPlayer.Run();
+                routines.lookAtPlayer.Run();
             }
             
             HandleState();
@@ -120,8 +111,6 @@ namespace Enemy {
         }
 
         public void SwapAgent(NavMeshAgent newAgent) {
-            //Debug.Log("Swapping Agent to " + newAgent.name);
-
             agent.speed = newAgent.speed;
             agent.angularSpeed = newAgent.angularSpeed;
             agent.acceleration = newAgent.acceleration;
@@ -135,7 +124,7 @@ namespace Enemy {
                 stateSwapped = false;
 
                 chaseTimer = 0f;
-                lookAtPlayer.Run(30f);
+                routines.lookAtPlayer.Run(30f);
             }
 
             target = Global.Plr.transform;
@@ -143,7 +132,7 @@ namespace Enemy {
             chaseTimer += Time.deltaTime;
 
             if(!seesPlayer) {
-                lookAtPlayer.Kill();
+                routines.lookAtPlayer.Kill();
                 SwapState(EnemyStates.Searching, 10f);
             }
         }
@@ -206,10 +195,9 @@ namespace Enemy {
 
             switch(state) {
                 case EnemyStates.Chasing:
-                    lookAround.Kill();
-                    Debug.Log("LookAround killed");
+                    routines.lookAround.Kill(true);
 
-                    lookAtPlayer.Run(45f);
+                    routines.lookAtPlayer.Run(45f);
                     SwapAgent(EnemyAgents.chaseAgent);
                     Look.visAngle = 30f;
                     Look.visRange = 30f;
@@ -221,7 +209,7 @@ namespace Enemy {
                     break;
                 case EnemyStates.Looking:
                     SwapAgent(EnemyAgents.searchAgent);
-                    lookAround.Run();
+                    routines.lookAround.Run();
                     Look.visAngle = 105f;
                     Look.visRange = 30f;
                     break;
@@ -250,8 +238,7 @@ namespace Enemy {
                     SwapState(EnemyStates.Looking);
                     break;
                 case EnemyStates.Looking:
-                    lookAround.Kill(true);
-                    Debug.Log("LookAround timed out");
+                    routines.lookAround.Kill(true);
                     SwapState(EnemyStates.Idle, 1.5f);
                     nextState = EnemyStates.Patrolling;
                     break;

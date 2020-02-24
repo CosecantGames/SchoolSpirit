@@ -13,8 +13,6 @@ public class LookAround : AIRoutine {
     public IEnumerator Routine(float turnSpeed = 7.5f, float turnAngle = 125f, float timeout = Mathf.Infinity) {
         isRunning = true;
 
-        Debug.Log("LookAround executed");
-
         float timer = 0f;
         Quaternion startRotation = transform.rotation;
         Quaternion leftRotation = Quaternion.Euler(0f, -turnAngle, 0f) * startRotation;
@@ -49,8 +47,6 @@ public class LookAround : AIRoutine {
 
             yield return null;
         }
-
-        Debug.Log("LookAround completed");
 
         isRunning = false;
     }

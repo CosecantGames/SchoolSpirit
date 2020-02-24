@@ -8,7 +8,8 @@ namespace Player {
         Walking,
         Running,
         Jumping,
-        Aerial
+        Aerial,
+        Crouching
     }
 
     public class Player : MonoBehaviour {
@@ -16,7 +17,7 @@ namespace Player {
         public static Camera Cam;
         public static PlrUse Use;
 
-        public static float visibility = 1f;
+        public float visibility = 1f;
 
         public static PlayerStates state;
         

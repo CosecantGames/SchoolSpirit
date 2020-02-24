@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class AIRoutine : MonoBehaviour {
+    public Clock clock = new Clock();
+
     //isRunning is ONLY change by the coroutine or Kill().
     public bool isRunning = false;
 
@@ -22,7 +24,7 @@ public class AIRoutine : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        Clock.timeElapsed += Time.deltaTime;
+        clock.timeElapsed += Time.deltaTime;
     }
 
     public void Run() {
@@ -36,8 +38,8 @@ public class AIRoutine : MonoBehaviour {
             return;
         }
 
-        Clock.startTime = Time.time;
-        Clock.timeElapsed = 0f;
+        clock.startTime = Time.time;
+        clock.timeElapsed = 0f;
     }
 
     public void Run(IEnumerator routineBase) {
@@ -47,8 +49,8 @@ public class AIRoutine : MonoBehaviour {
             throw new BadRoutineName("Called routine does not exist.");
         }
 
-        Clock.startTime = Time.time;
-        Clock.timeElapsed = 0f;
+        clock.startTime = Time.time;
+        clock.timeElapsed = 0f;
     }
 
     //Ends the coroutine. forceImmediate kills it immediately
@@ -63,15 +65,19 @@ public class AIRoutine : MonoBehaviour {
         }
     }
 
-    static class Clock {
+    public class Clock {
+        public Clock() {
+
+        }
+
         //The time the routine was started (from Time.time)
-        public static float startTime = 0f;
+        public float startTime = 0f;
 
         //This tells how long since the coroutine was last started (using deltaTime)
-        public static float timeElapsed = 0f;
+        public float timeElapsed = 0f;
 
         //This tells how long since the coroutine was last started (without using deltaTime)
-        public static float sinceStart() {
+        public float sinceStart() {
             return Time.time - startTime;
         }
     }

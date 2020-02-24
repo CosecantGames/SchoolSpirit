@@ -44,3 +44,96 @@ public class BadVectorComponents : Exception {
 
     }
 }
+
+public static class Sees {
+    public static bool sees(this GameObject from, GameObject to) {
+        LayerMask mask = ~6148;
+
+        int fromLayer = from.layer;
+        int toLayer = to.layer;
+
+        from.layer = 2;
+        to.layer = 2;
+
+        bool result;
+
+        result = Physics.Linecast(from.transform.position, to.transform.position, mask);
+        
+        from.layer = fromLayer;
+        to.layer = toLayer;
+
+        return !result;
+    }
+
+    public static bool sees(this GameObject from, GameObject to, LayerMask mask) {
+        int fromLayer = from.layer;
+        int toLayer = to.layer;
+
+        from.layer = 2;
+        to.layer = 2;
+        
+        bool result = Physics.Linecast(from.transform.position, to.transform.position, mask);
+        
+        from.layer = fromLayer;
+        to.layer = toLayer;
+
+        return !result;
+    }
+
+    public static bool sees(this Component from, Component to) {
+        LayerMask mask = ~6148;
+
+        int fromLayer = from.gameObject.layer;
+        int toLayer = to.gameObject.layer;
+
+        from.gameObject.layer = 2;
+        to.gameObject.layer = 2;
+
+        bool result;
+
+        result = Physics.Linecast(from.transform.position, to.transform.position, mask);
+
+        from.gameObject.layer = fromLayer;
+        to.gameObject.layer = toLayer;
+
+        return !result;
+    }
+
+    public static bool sees(this Component from, GameObject to) {
+        LayerMask mask = ~6148;
+
+        int fromLayer = from.gameObject.layer;
+        int toLayer = to.gameObject.layer;
+
+        from.gameObject.layer = 2;
+        to.gameObject.layer = 2;
+
+        bool result;
+
+        result = Physics.Linecast(from.transform.position, to.transform.position, mask);
+
+        from.gameObject.layer = fromLayer;
+        to.gameObject.layer = toLayer;
+
+        return !result;
+    }
+
+    public static bool sees(this GameObject from, Component to) {
+        LayerMask mask = ~6148;
+
+        int fromLayer = from.gameObject.layer;
+        int toLayer = to.gameObject.layer;
+
+        from.gameObject.layer = 2;
+        to.gameObject.layer = 2;
+
+        bool result;
+
+        result = Physics.Linecast(from.transform.position, to.transform.position, mask);
+
+        from.gameObject.layer = fromLayer;
+        to.gameObject.layer = toLayer;
+
+        return !result;
+    }
+}

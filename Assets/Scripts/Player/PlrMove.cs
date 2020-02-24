@@ -19,6 +19,8 @@ namespace Player {
         public bool runPressed;
         public bool jumpPressed;
         public bool crouchPressed;
+        public bool crouchHeld;
+        bool crouchReleased;
 
         //Things ranged 0f - 1f are percentages used to scale their corresponding value
         //(eg, walkAccel of 0.1 means the player accelerates 10% of the walkMaxSpeed value every update)
@@ -47,10 +49,13 @@ namespace Player {
         [Range(0f, 1f)]
         public float airReverseSpeed = 0.05f;  //How fast you can change your direction in air (eg left to right)
 
+        [Header("Crouch Options")]
+        public bool toggleCrouch = false;
         [Range(0.001f, 1f)]
         public float crouchHeight;
-        float standingHeight;
         public float crouchSpeed = 0.3f;
+        bool isCrouching = false;
+        float standingHeight;
 
         public float gravity = 20f;
 
@@ -126,11 +131,19 @@ namespace Player {
         }
 
         void Crouch() {
+            if(toggleCrouch) {
+                if(crouchPressed) {
+                    isCrouching = !isCrouching;
+                }
+            } else {
+                isCrouching = crouchHeld;
+            }
+
             Vector3 newHeight = transform.localScale;
 
-            newHeight.y = crouchPressed ? crouchHeight : standingHeight;
+            newHeight.y = isCrouching ? crouchHeight : standingHeight;
 
-            transform.localScale = Vector3.MoveTowards(transform.localScale, newHeight, crouchSpeed);
+            transform.localScale = Vector3.Lerp(transform.localScale, newHeight, crouchSpeed);
         }
 
         void HandleInput() {
@@ -147,7 +160,10 @@ namespace Player {
 
             runPressed = Input.GetButton(RunInput);
             jumpPressed = Input.GetButtonDown(JumpInput);
-            crouchPressed = Input.GetButton(CrouchInput);
+
+            crouchPressed = Input.GetButtonDown(CrouchInput);
+            crouchHeld = Input.GetButton(CrouchInput);
+            crouchReleased = Input.GetButtonUp(CrouchInput);
         }
 
         void HandleState() {
