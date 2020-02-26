@@ -18,10 +18,9 @@ namespace Enemy {
     }
 
     public class Enemy : MonoBehaviour {
-        //public EnemyMove Move;
+        public EnemyMove Move;
         public EnemyLook Look;
-        //public EnemyPatrol Patrol;
-        //public EnemyChase Chase;
+        public EnemyState State;
 
         public NavMeshAgent agent;
 
@@ -31,11 +30,22 @@ namespace Enemy {
 
         public bool seesPlayer = false;
 
-        public Transform target;
+        [Header("Alert Speed Stuff")]
+        public float awareness;
+
+        public float searchTolerance = 5f;   //When awareness > this value, enemy starts searching
+        public float alertTolerance = 8f;   //When awareness > this value, enemy starts chasing
+
+        [Range(0f, 1f)]
+        public float awarenessRiseScalar = 1f;  //How quickly awareness increases
+        [Range(0f, 1f)]
+        public float awarenessFallScalar = 1f;  //How quickly awareness decreases
 
         private void Awake() {
             routines = GetComponent<EnemyRoutines>();
+            Move = GetComponent<EnemyMove>();
             Look = GetComponent<EnemyLook>();
+            State = GetComponent<EnemyState>();
 
             agent = GetComponent<NavMeshAgent>();
 
@@ -51,15 +61,34 @@ namespace Enemy {
         public EnemyRoutines routines;
 
         public float stateTimer;
-        bool stateSwapped = false;
+        public bool stateSwapped = false;
 
-        // Start is called before the first frame update
-        void Start() {
-            target = transform;
+        public float alertTimer = 0f;
+
+        private void FixedUpdate() {
+            if(seesPlayer) {
+                awareness += Global.Plr.visibility * Global.Plr.visibility * awarenessRiseScalar *
+                    (1 - Global.Map(transform.position.flatDistTo(Global.Plr.transform.position), 0f, Look.visRange, 0f, 1f));
+            } else {
+                awareness *= awarenessFallScalar;
+                if(awareness < 0.01) {
+                    awareness = 0f;
+                }
+            }
+
+            awareness = Mathf.Clamp(awareness, 0f, 100f);
+
         }
 
         // Update is called once per frame
         void Update() {
+            alertTimer += Time.deltaTime;
+
+            if(awareness >= 1) {
+                Debug.Log("Reached 1 awareness in " + alertTimer);
+                awareness = -500f;
+            }
+
             if(Input.GetButtonDown("BigRedButton")) {
                 Debug.Log("PUSHED THE BIG RED BUTTON!!!");
                 routines.KillAll(true);
@@ -79,15 +108,15 @@ namespace Enemy {
 
             switch(state) {
                 case EnemyStates.Chasing:
-                    Chase();
+                    Move.Chase();
                     break;
                 case EnemyStates.Searching:
-                    Search();
+                    Move.Search();
                     break;
                 case EnemyStates.Looking:
                     break;
                 case EnemyStates.Patrolling:
-                    Patrol();
+                    Move.Patrol();
                     break;
                 case EnemyStates.Idle:
                     break;
@@ -105,8 +134,17 @@ namespace Enemy {
         }
 
         void HandleState() {
-            if(seesPlayer && state != EnemyStates.Chasing) {
-                SwapState(EnemyStates.Chasing);
+            //if(seesPlayer && state != EnemyStates.Chasing) {
+            //    SwapState(EnemyStates.Chasing);
+            //}
+            if(awareness > alertTolerance) {
+                if(state != EnemyStates.Chasing) {
+                    //SwapState(EnemyStates.Chasing);
+                }
+            } else if(awareness > searchTolerance) {
+                if(state != EnemyStates.Searching) {
+                    //SwapState(EnemyStates.Searching);
+                }
             }
         }
 
@@ -118,80 +156,14 @@ namespace Enemy {
             agent.autoBraking = newAgent.autoBraking;
         }
 
-        float chaseTimer = 0f;
-        public void Chase() {
-            if(stateSwapped) {
-                stateSwapped = false;
-
-                chaseTimer = 0f;
-                routines.lookAtPlayer.Run(30f);
-            }
-
-            target = Global.Plr.transform;
-            agent.destination = target.position;
-            chaseTimer += Time.deltaTime;
-
-            if(!seesPlayer) {
-                routines.lookAtPlayer.Kill();
-                SwapState(EnemyStates.Searching, 10f);
-            }
-        }
-
-        [Header("Searching Stuff")]
-
-        public float searchDist;
-        public Vector3 lastPlayerPos;
-        public void Search() {
-            if(stateSwapped) {
-                stateSwapped = false;
-
-                List<Node> searchRoute;
-                lastPlayerPos = Global.Plr.transform.position;
-                agent.destination = lastPlayerPos;
-            }
-            
-            searchDist = transform.position.flatDistTo(lastPlayerPos);
-            Debug.DrawLine(transform.position, lastPlayerPos);
-
-            if(transform.position.flatDistTo(lastPlayerPos) <= 0.5) {
-                SwapState(EnemyStates.Looking, 4f);
-            }
-        }
-
-        [Header("Patrol Settings")]
-
-        public List<Node> patrolRoute;
-        public RouteType routeType = RouteType.Loop;
-        public Node targetNode;
-        public int routeIndex = 0;
-
-        public float remainingDist = 0f;
-
-        public void Patrol() {
-            if(stateSwapped) {
-                stateSwapped = false;
-            }
-
-            if(patrolRoute.Count < 1) {
-                return;
-            }
-
-            remainingDist = transform.position.flatDistTo(target.position);
-
-            if(remainingDist <= 1) {
-                routeIndex = routeIndex < patrolRoute.Count - 1 ? routeIndex + 1 : 0;
-                targetNode = patrolRoute[routeIndex];
-            }
-
-            target = targetNode.transform;
-
-            agent.destination = target.position;
-        }
-
+        public float chaseTimer = 0f;
+        
         //Enemy State management
         public void SwapState(EnemyStates newState = EnemyStates.Patrolling, float time = 5f) {
             state = newState;
             stateSwapped = true;
+
+            routines.KillAll(true);
 
             switch(state) {
                 case EnemyStates.Chasing:
