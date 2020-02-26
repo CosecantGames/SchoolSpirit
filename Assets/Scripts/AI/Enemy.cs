@@ -28,6 +28,7 @@ namespace Enemy {
         public EnemyStates lastState;   //State during previous frame
         public EnemyStates nextState = EnemyStates.Patrolling;   //State to go to after timing out idle
 
+        public bool ignorePlayer = false;
         public bool seesPlayer = false;
 
         [Header("Alert Speed Stuff")]
@@ -67,7 +68,7 @@ namespace Enemy {
 
         private void FixedUpdate() {
             if(seesPlayer) {
-                awareness += Global.Plr.visibility * Global.Plr.visibility * awarenessRiseScalar *
+                awareness += Player.Player.visibility * Player.Player.visibility * awarenessRiseScalar *
                     (1 - Global.Map(transform.position.flatDistTo(Global.Plr.transform.position), 0f, Look.visRange, 0f, 1f));
             } else {
                 awareness *= awarenessFallScalar;
@@ -82,13 +83,6 @@ namespace Enemy {
 
         // Update is called once per frame
         void Update() {
-            alertTimer += Time.deltaTime;
-
-            if(awareness >= 1) {
-                Debug.Log("Reached 1 awareness in " + alertTimer);
-                awareness = -500f;
-            }
-
             if(Input.GetButtonDown("BigRedButton")) {
                 Debug.Log("PUSHED THE BIG RED BUTTON!!!");
                 routines.KillAll(true);
@@ -134,16 +128,17 @@ namespace Enemy {
         }
 
         void HandleState() {
-            //if(seesPlayer && state != EnemyStates.Chasing) {
-            //    SwapState(EnemyStates.Chasing);
-            //}
+            if(ignorePlayer) {
+                return;
+            }
+
             if(awareness > alertTolerance) {
                 if(state != EnemyStates.Chasing) {
-                    //SwapState(EnemyStates.Chasing);
+                    SwapState(EnemyStates.Chasing);
                 }
             } else if(awareness > searchTolerance) {
                 if(state != EnemyStates.Searching) {
-                    //SwapState(EnemyStates.Searching);
+                    SwapState(EnemyStates.Searching);
                 }
             }
         }

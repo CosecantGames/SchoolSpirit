@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Player.Player;
 
 namespace Player {
     public enum PlayerStates {
@@ -16,8 +17,9 @@ namespace Player {
         public static PlrMove Move;
         public static Camera Cam;
         public static PlrUse Use;
+        public static SphereCollider Head;
 
-        public float visibility = 1f;
+        public static float visibility = 1f;
 
         public static PlayerStates state;
         
@@ -26,6 +28,8 @@ namespace Player {
             Cam = GetComponentInChildren<Camera>();
             Move = GetComponent<PlrMove>();
             Use = GetComponent<PlrUse>();
+
+            Head = GetComponentInChildren<SphereCollider>();
         }
 
         // Update is called once per frame

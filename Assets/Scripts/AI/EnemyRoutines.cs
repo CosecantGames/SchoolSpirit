@@ -8,8 +8,11 @@ namespace Enemy {
         Enemy me;
 
         public LookAround lookAround;
+        public bool lookAroundRunning = false;
         public LookAt lookAt;
+        public bool lookAtRunning = false;
         public LookAtPlayer lookAtPlayer;
+        public bool lookAtPlayerRunning = false;
 
         private void Awake() {
             me = GetComponent<Enemy>();
@@ -26,10 +29,13 @@ namespace Enemy {
 
         // Update is called once per frame
         void Update() {
+            lookAroundRunning = lookAround.isRunning;
+            lookAtRunning = lookAt.isRunning;
+            lookAtPlayerRunning = lookAtPlayer.isRunning;
 
         }
 
-        public void KillAll(bool forceImmediate = false) {
+        public void KillAll(bool forceImmediate = true) {
             lookAround.Kill(forceImmediate);
             lookAt.Kill(forceImmediate);
             lookAtPlayer.Kill(forceImmediate);

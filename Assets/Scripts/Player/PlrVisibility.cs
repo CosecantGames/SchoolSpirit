@@ -31,7 +31,7 @@ namespace Player {
             CalcLights();
             visMeter.text = "Visibility: " + FormatVis() + "% (" + vis + ")\nEnemy Awareness: " + enemy.awareness;
 
-            player.visibility = vis;
+            Player.visibility = vis;
 
             if(Input.GetKeyDown(KeyCode.T)) {
                 SeeTest();

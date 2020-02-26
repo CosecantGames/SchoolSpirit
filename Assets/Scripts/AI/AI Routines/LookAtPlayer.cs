@@ -16,18 +16,14 @@ public class LookAtPlayer : AIRoutine {
     public IEnumerator Routine(float turnSpeed = 8f) {
         isRunning = true;
 
-        if(me.seesPlayer == false) {
-            Debug.Log("LookAtPlayer routine quit immediately; cannot see player.");
-        }
-
-        while(me.seesPlayer) {
+        while(true) {
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(Global.Plr.transform.position - transform.position, transform.up), Time.deltaTime * turnSpeed);
 
             if(forceBreak) { break; }
 
             yield return null;
         }
-        
+
         isRunning = false;
     }
 }

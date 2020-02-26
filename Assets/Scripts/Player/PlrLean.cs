@@ -1,46 +1,79 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Player.Player;
+using static Global;
 
 namespace Player {
     public class PlrLean : MonoBehaviour {
+        [Header("Lean Config")]
         public string leanInput = "Lean";
         public float leanAxis;
 
         public float leanAngle = 10f;
-        public float leanDistance = 0.8f;
-        public float leanSpeed = 0.05f;
-        public float leanRotSpeed = 0.05f;
+        public float leanDistance = 1f;
+        public float leanSpeed = 2f;
+        public float rotSpeed = 2f;
 
-        Vector3 leanPos;
-        Vector3 leanRot;
+        Vector3 posTarget;
+        Vector3 rotTarget;
 
-        Vector3 lastUp;
+        [Header("Wall Collision")]
+        public bool baseHeadOnSphere = false;
+        public float headRadius = 0.35f;
+        public float distToWall;    //proportional to leanDistance; 0 = no distance to lean, 1 = can lean fully
+        public bool camInsideWall;
+        public float camRemovalFactor = 10f;
 
-        private void Awake() {
-            lastUp = transform.up;
-        }
+        public LayerMask leanLayers = 1 << 10;
 
-        // Start is called before the first frame update
-        void Start() {
-            leanPos = Player.Cam.transform.position + new Vector3(leanDistance, 0f, 0f);
-            leanRot = Player.Cam.transform.eulerAngles + new Vector3(0f, 0f, leanAngle * -1);
+        private void Start() {
+            if(baseHeadOnSphere) {
+                headRadius = Head.radius;
+            } else {
+                Head.radius = headRadius;
+            }
         }
 
         // Update is called once per frame
         void Update() {
-            if(transform.up != lastUp) {
-                //player.log("transform.up changed!");
-            }
-
-            lastUp = transform.up;
-
-
             leanAxis = Input.GetAxis(leanInput);
 
-            Player.Cam.transform.localPosition = Vector3.MoveTowards(Player.Cam.transform.localPosition, leanPos * leanAxis, leanSpeed);
-            Player.Cam.transform.eulerAngles = Vector3.RotateTowards(Player.Cam.transform.eulerAngles, leanRot * leanAxis, leanRotSpeed, leanSpeed);
-        }
-    }
+            SetDistToWall();
+            CheckCamInsideWall();
 
+            posTarget = Cam.transform.localPosition;
+            posTarget.x = leanDistance * leanAxis * distToWall;
+
+            rotTarget = Cam.transform.localEulerAngles;
+            rotTarget.z = leanAngle * leanAxis * distToWall * -1;
+
+            float totalSpeed = Time.deltaTime * leanSpeed;
+            if(camInsideWall) {
+                totalSpeed *= camRemovalFactor;
+            }
+
+            Cam.transform.localPosition = Vector3.Lerp(Cam.transform.localPosition, posTarget, totalSpeed);
+            Cam.transform.localRotation = Quaternion.Lerp(Cam.transform.localRotation, Quaternion.Euler(rotTarget), totalSpeed);
+        }
+
+        void SetDistToWall() {
+            //If ray traveling in lean direction hits wall...
+            if(Physics.Raycast(Head.transform.position, Head.transform.right * leanAxis, out RaycastHit hitL, headRadius + leanDistance, leanLayers)) {
+                // ...make distToWall a scalar proportional to how far from the wall the head is
+                distToWall = Map(hitL.distance, headRadius, headRadius + leanDistance, 0, 1);
+            } else {
+                //If you didn't hit a wall, then scalar is 1 (doesn't affect leanDistance)
+                distToWall = 1f;
+            }
+        }
+
+        void CheckCamInsideWall() {
+            camInsideWall = Physics.CheckSphere(Cam.transform.position, headRadius, leanLayers);
+        }
+
+        //private void OnDrawGizmosSelected() {
+        //    Gizmos.DrawWireSphere(Cam.transform.position, headRadius);
+        //}
+    }
 }
