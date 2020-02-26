@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace Player {
     public class PlrLean : MonoBehaviour {
+        Player player;
+
         public string leanInput = "Lean";
         public float leanAxis;
 
@@ -15,31 +17,22 @@ namespace Player {
         Vector3 leanPos;
         Vector3 leanRot;
 
-        Vector3 lastUp;
-
         private void Awake() {
-            lastUp = transform.up;
+            player = GetComponent<Player>();
         }
 
         // Start is called before the first frame update
         void Start() {
-            leanPos = Player.Cam.transform.position + new Vector3(leanDistance, 0f, 0f);
-            leanRot = Player.Cam.transform.eulerAngles + new Vector3(0f, 0f, leanAngle * -1);
+            leanPos = player.Cam.transform.position + new Vector3(leanDistance, 0f, 0f);
+            leanRot = player.Cam.transform.eulerAngles + new Vector3(0f, 0f, leanAngle * -1);
         }
 
         // Update is called once per frame
         void Update() {
-            if(transform.up != lastUp) {
-                //player.log("transform.up changed!");
-            }
-
-            lastUp = transform.up;
-
-
             leanAxis = Input.GetAxis(leanInput);
 
-            Player.Cam.transform.localPosition = Vector3.MoveTowards(Player.Cam.transform.localPosition, leanPos * leanAxis, leanSpeed);
-            Player.Cam.transform.eulerAngles = Vector3.RotateTowards(Player.Cam.transform.eulerAngles, leanRot * leanAxis, leanRotSpeed, leanSpeed);
+            player.Cam.transform.localPosition = Vector3.MoveTowards(player.Cam.transform.localPosition, leanPos * leanAxis, leanSpeed);
+            player.Cam.transform.eulerAngles = Vector3.RotateTowards(player.Cam.transform.eulerAngles, leanRot * leanAxis, leanRotSpeed, leanSpeed);
         }
     }
 

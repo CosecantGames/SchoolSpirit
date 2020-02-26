@@ -3,8 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Player {
+    public enum PlayerStates {
+        Idle,
+        Walking,
+        Running,
+        Jumping,
+        Aerial
+    }
+
     public class PlrMove : MonoBehaviour {
-        //public Player player;
+        public PlayerStates state;
 
         [Header("Inputs")]
         public string HorizontalInput = "Horizontal";
@@ -63,7 +71,6 @@ namespace Player {
         CharacterController charControl;
 
         private void Awake() {
-            //player = GetComponent<Player>();
             charControl = GetComponent<CharacterController>();
             standingHeight = transform.localScale.y;
         }
@@ -154,15 +161,15 @@ namespace Player {
             if(charControl.isGrounded) {
                 if(inputVector.x != 0 || inputVector.z != 0) {
                     if(runPressed) {
-                        Player.state = PlayerStates.Running;
+                        state = PlayerStates.Running;
                     } else {
-                        Player.state = PlayerStates.Walking;
+                        state = PlayerStates.Walking;
                     }
                 } else {
-                    Player.state = PlayerStates.Idle;
+                    state = PlayerStates.Idle;
                 }
             } else {
-                Player.state = PlayerStates.Aerial;
+                state = PlayerStates.Aerial;
             }
         }
     }

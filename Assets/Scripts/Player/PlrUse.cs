@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Player {
-    public class PlrUse : MonoBehaviour {
+namespace Player 
+{
+    public class PlrUse : MonoBehaviour 
+    {
         public Player player;
 
         [Range(0f, 10f)]
@@ -12,23 +14,31 @@ namespace Player {
         public string pickupInput = "Pickup";
         bool pickupPressed;
 
-        private void Awake() {
+
+        private void Awake() 
+        {
             player = GetComponent<Player>();
         }
 
         // Start is called before the first frame update
-        void Start() {
-
+        void Start() 
+        {
+            
         }
 
         // Update is called once per frame
-        void Update() {
-            pickupPressed = Input.GetButtonDown(pickupInput);
+        void Update() 
+        {
+            pickupPressed = Input.GetButtonDown("Pickup");
 
-            if(pickupPressed) {
+            if (pickupPressed) 
+            {
+                player.log("Clicked.");
                 //This detects things on layer 9. Change the bitmask (1 << 9) to change the layer it's active for.
-                if(Physics.Raycast(Player.Cam.transform.position, Player.Cam.transform.forward, out RaycastHit hit, pickupRange, 1 << 9)) {
-                    //hit.transform.gameObject.SendMessage("Use", gameObject);
+                if(Physics.Raycast(player.Cam.transform.position, player.Cam.transform.forward, out RaycastHit hit, pickupRange, 1 << 9)) 
+                {
+                    player.log("Used a thing.");
+                    hit.transform.gameObject.SendMessage("Use", gameObject);
                 }
             }
         }
