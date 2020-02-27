@@ -18,20 +18,29 @@ namespace Enemy {
     }
 
     public class Enemy : MonoBehaviour {
+        [Header("Enemy Components")]
         public EnemyMove Move;
         public EnemyLook Look;
         public EnemyState State;
+        public EnemyRoutines Routines;
+        public EnemyConfig Configs;
 
+        [Space(6)]
         public NavMeshAgent agent;
+        public Config config;
 
+        [Space(6)]
         public EnemyStates state;
         public EnemyStates lastState;   //State during previous frame
         public EnemyStates nextState = EnemyStates.Patrolling;   //State to go to after timing out idle
 
+        [Space(6)]
         public bool ignorePlayer = false;
+        public bool hasLineOfSight = false;
         public bool seesPlayer = false;
 
         [Header("Alert Speed Stuff")]
+        public int playerProximity;
         public float awareness;
 
         public float searchTolerance = 5f;   //When awareness > this value, enemy starts searching
@@ -43,10 +52,11 @@ namespace Enemy {
         public float awarenessFallScalar = 1f;  //How quickly awareness decreases
 
         private void Awake() {
-            routines = GetComponent<EnemyRoutines>();
+            Routines = GetComponent<EnemyRoutines>();
             Move = GetComponent<EnemyMove>();
             Look = GetComponent<EnemyLook>();
             State = GetComponent<EnemyState>();
+            Configs = GetComponent<EnemyConfig>();
 
             agent = GetComponent<NavMeshAgent>();
 
@@ -54,48 +64,28 @@ namespace Enemy {
             lastState = nextState;
         }
 
-        public KeyCode startLook = KeyCode.O;
-        public KeyCode startLookPlr = KeyCode.P;
-
-        [Header("AIRoutines")]
-        public AIRoutine[] routineQueue;
-        public EnemyRoutines routines;
-
         public float stateTimer;
         public bool stateSwapped = false;
 
-        public float alertTimer = 0f;
-
         private void FixedUpdate() {
-            if(seesPlayer) {
-                awareness += Player.Player.visibility * Player.Player.visibility * awarenessRiseScalar *
-                    (1 - Global.Map(transform.position.flatDistTo(Global.Plr.transform.position), 0f, Look.visRange, 0f, 1f));
-            } else {
-                awareness *= awarenessFallScalar;
-                if(awareness < 0.01) {
-                    awareness = 0f;
-                }
-            }
+            //if(seesPlayer) {
+            //    awareness += Player.Player.visibility * Player.Player.visibility * awarenessRiseScalar *
+            //        (1 - Global.Map(transform.position.flatDistTo(Global.Plr.transform.position), 0f, Look.visRange, 0f, 1f));
+            //} else {
+            //    awareness *= awarenessFallScalar;
+            //    if(awareness < 0.01) {
+            //        awareness = 0f;
+            //    }
+            //}
 
-            awareness = Mathf.Clamp(awareness, 0f, 100f);
-
+            //awareness = Mathf.Clamp(awareness, 0f, 100f);
         }
 
         // Update is called once per frame
         void Update() {
             if(Input.GetButtonDown("BigRedButton")) {
                 Debug.Log("PUSHED THE BIG RED BUTTON!!!");
-                routines.KillAll(true);
-            }
-
-            if(Input.GetKeyDown(startLook)) {
-                state = EnemyStates.Looking;
-                stateTimer = 6f;
-                routines.lookAround.Run(6f, 130f, 6f);
-            }
-
-            if(Input.GetKeyDown(startLookPlr)) {
-                routines.lookAtPlayer.Run();
+                Routines.KillAll(true);
             }
             
             HandleState();
@@ -158,37 +148,37 @@ namespace Enemy {
             state = newState;
             stateSwapped = true;
 
-            routines.KillAll(true);
+            Routines.KillAll(true);
 
             switch(state) {
                 case EnemyStates.Chasing:
-                    routines.lookAround.Kill(true);
-
-                    routines.lookAtPlayer.Run(45f);
                     SwapAgent(EnemyAgents.chaseAgent);
-                    Look.visAngle = 30f;
-                    Look.visRange = 30f;
+                    config = Configs.Chase;
+
+                    Routines.lookAtPlayer.Run(45f);
+
                     break;
                 case EnemyStates.Searching:
                     SwapAgent(EnemyAgents.searchAgent);
-                    Look.visAngle = 75f;
-                    Look.visRange = 30f;
+                    config = Configs.Search;
+
                     break;
                 case EnemyStates.Looking:
                     SwapAgent(EnemyAgents.searchAgent);
-                    routines.lookAround.Run();
-                    Look.visAngle = 105f;
-                    Look.visRange = 30f;
+                    config = Configs.Look;
+
+                    Routines.lookAround.Run();
+
                     break;
                 case EnemyStates.Patrolling:
                     SwapAgent(EnemyAgents.patrolAgent);
-                    Look.visAngle = 40f;
-                    Look.visRange = 30f;
+                    config = Configs.Patrol;
+
                     break;
                 case EnemyStates.Idle:
                     SwapAgent(EnemyAgents.idleAgent);
-                    Look.visAngle = 75f;
-                    Look.visRange = 16f;
+                    config = Configs.Search;
+
                     break;
                 default:
                     break;
@@ -205,7 +195,7 @@ namespace Enemy {
                     SwapState(EnemyStates.Looking);
                     break;
                 case EnemyStates.Looking:
-                    routines.lookAround.Kill(true);
+                    Routines.lookAround.Kill(true);
                     SwapState(EnemyStates.Idle, 1.5f);
                     nextState = EnemyStates.Patrolling;
                     break;

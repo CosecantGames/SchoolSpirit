@@ -18,7 +18,7 @@ namespace Enemy {
                 me.stateSwapped = false;
 
                 me.chaseTimer = 0f;
-                me.routines.lookAtPlayer.Run(30f);
+                me.Routines.lookAtPlayer.Run(30f);
             }
 
             target = Global.Plr.transform;
@@ -26,7 +26,7 @@ namespace Enemy {
             me.chaseTimer += Time.deltaTime;
 
             if(!me.seesPlayer) {
-                me.routines.lookAtPlayer.Kill();
+                me.Routines.lookAtPlayer.Kill();
                 me.SwapState(EnemyStates.Searching, me.chaseTimer * 2);
             }
         }

@@ -62,9 +62,14 @@ public class Node : MonoBehaviour {
             findNeighbors = false;
         }
 
-        if(showLines || nodeMap.edgesVisisble) {
-            Gizmos.color = showLines ? Color.cyan : Color.magenta;
-            DrawNeighbors();
+        try {
+            if(showLines || nodeMap.edgesVisisble) {
+                Gizmos.color = showLines ? Color.cyan : Color.magenta;
+                DrawNeighbors();
+            }
+        } catch {
+            nodeMap = GetComponentInParent<NodeMap>();
+            throw new System.Exception("Could not find parent map. Attempting to find...");
         }
     }
 }

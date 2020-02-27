@@ -8,9 +8,9 @@ namespace Player {
         public Player player;
 
         [Range(0f, 10f)]
-        public float pickupRange = 6f;
-        public string pickupInput = "Pickup";
-        bool pickupPressed;
+        public float useRange = 6f;
+        public string useInput = "Use";
+        bool usePressed;
 
         private void Awake() {
             player = GetComponent<Player>();
@@ -23,11 +23,11 @@ namespace Player {
 
         // Update is called once per frame
         void Update() {
-            pickupPressed = Input.GetButtonDown(pickupInput);
+            usePressed = Input.GetButtonDown(useInput);
 
-            if(pickupPressed) {
+            if(usePressed) {
                 //This detects things on layer 9. Change the bitmask (1 << 9) to change the layer it's active for.
-                if(Physics.Raycast(Player.Cam.transform.position, Player.Cam.transform.forward, out RaycastHit hit, pickupRange, 1 << 9)) {
+                if(Physics.Raycast(Player.Cam.transform.position, Player.Cam.transform.forward, out RaycastHit hit, useRange, 1 << 9)) {
                     try {
                         hit.transform.gameObject.SendMessage("Use", gameObject);
                     } catch {

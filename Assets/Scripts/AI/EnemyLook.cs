@@ -15,9 +15,7 @@ namespace Enemy {
         public Vector3 vectorToPlr = Vector3.zero;
 
         public float angleToPlr;
-        public float distToPlr = 0f;
-
-        public bool inVisCone = false;
+        public int playerProximity = 0;
 
         private void Awake() {
             me = GetComponent<Enemy>();
@@ -38,17 +36,26 @@ namespace Enemy {
         }
 
         public void LookForPlayer() {
-            if(
-                angleToPlr <= visAngle / 2 &&   //Plr is in vis cone
-                Physics.Raycast(transform.position, vectorToPlr, out RaycastHit hit, visRange) &&   //Enemy sees something in vis range
-                hit.transform.CompareTag("Player")  //Thing that enemy sees is the player
-            ) {
-                distToPlr = hit.distance;
-                me.seesPlayer = true;
+            bool inVisCone = angleToPlr <= visAngle / 2;
+            me.hasLineOfSight = me.sees(Global.Plr) && inVisCone;
+
+            if(me.hasLineOfSight) {
+                Physics.Raycast(transform.position, Global.Plr.transform.position - transform.position, out RaycastHit hit);
+
+                if(hit.distance < me.config.visRangeNear) {
+                    playerProximity = 3;
+                } else if(hit.distance < me.config.visRangeMid) {
+                    playerProximity = 2;
+                } else if(hit.distance < me.config.visRangeFar) {
+                    playerProximity = 1;
+                } else {
+                    playerProximity = 0;
+                }
             } else {
-                distToPlr = -1f;
-                me.seesPlayer = false;
+                playerProximity = -1;
             }
+
+            me.playerProximity = playerProximity;
         }
 
         private void OnDrawGizmosSelected() {

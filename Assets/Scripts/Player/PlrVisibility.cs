@@ -12,9 +12,6 @@ namespace Player {
         public Enemy.Enemy enemy;
         public TextMeshProUGUI visMeter;
 
-        [Range(0f, 1f)]
-        public float vis;
-
         private void Awake() {
             player = GetComponent<Player>();
             enemy = GameObject.Find("Enemy").GetComponent<Enemy.Enemy>();
@@ -29,36 +26,20 @@ namespace Player {
         void Update() {
             //FindLights();
             CalcLights();
-            visMeter.text = "Visibility: " + FormatVis() + "% (" + vis + ")\nEnemy Awareness: " + enemy.awareness;
-
-            Player.visibility = vis;
-
-            if(Input.GetKeyDown(KeyCode.T)) {
-                SeeTest();
-            }
-        }
-
-        float FormatVis() {
-            float prettyVis = vis;
-            if(prettyVis > 1) {
-                prettyVis = 1;
-            }
-
-            prettyVis = Mathf.Round(prettyVis * 100f);
-
-            return prettyVis;
+            visMeter.text = "Light level: " + Player.lightLevel + "\nEnemy Proximity: " + enemy.playerProximity;
         }
 
         void CalcLights() {
-            float newVis = 0f;
+            int lightLevel = 0;
 
             foreach(VisLight light in Global.lightScripts) {
                 if(light.seesPlayer) {
-                    newVis += light.PlayerLightingIndex();
+                    int lightIndex = light.PlayerLightingIndex();
+                    lightLevel = lightIndex > lightLevel ? lightIndex : lightLevel;
                 }
             }
 
-            vis = newVis;
+            Player.lightLevel = lightLevel;
         }
 
         //void FindLights() {

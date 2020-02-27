@@ -19,7 +19,7 @@ namespace Player {
         public static PlrUse Use;
         public static SphereCollider Head;
 
-        public static float visibility = 1f;
+        public static int lightLevel = 0;
 
         public static PlayerStates state;
         

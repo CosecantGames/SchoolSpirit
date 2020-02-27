@@ -137,3 +137,9 @@ public static class Sees {
         return !result;
     }
 }
+
+public static class DistTo {
+    public static float distTo(this Vector3 start, Vector3 end) {
+        return (start - end).magnitude;
+    }
+}

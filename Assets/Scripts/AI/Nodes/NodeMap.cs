@@ -51,7 +51,7 @@ public class NodeMap : MonoBehaviour {
     }
 
     private void BuildGraph() {
-        nodeList = FindObjectsOfType<Node>();
+        nodeList = GetComponentsInChildren<Node>();
         int indexCount = 0;
 
         Debug.Log("Finding neighbors...");
