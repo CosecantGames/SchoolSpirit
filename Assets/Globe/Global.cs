@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Player.Player;
 
 public class Global : MonoBehaviour {
     public static Player.Player Plr;

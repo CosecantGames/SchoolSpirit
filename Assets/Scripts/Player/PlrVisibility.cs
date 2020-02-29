@@ -26,7 +26,7 @@ namespace Player {
         void Update() {
             //FindLights();
             CalcLights();
-            visMeter.text = "Light level: " + Player.lightLevel + "\nEnemy Proximity: " + enemy.playerProximity;
+            visMeter.text = "Light level: " + Player.lightLevel + "\nEnemy Proximity: " + enemy.playerProximity + "\nAwareness: " + enemy.awareness;
         }
 
         void CalcLights() {

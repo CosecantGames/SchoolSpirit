@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Player.Player;
 
 namespace Player {
     public enum PlayerStates {

@@ -8,9 +8,9 @@ public class EffectRadiusEditor : Editor
         VisLight t = (target as VisLight);
 
         EditorGUI.BeginChangeCheck();
-        float lowLightRadius = Handles.RadiusHandle(Quaternion.identity, t.transform.position, t.lowLightRadius);
-        float midLightRadius = Handles.RadiusHandle(Quaternion.identity, t.transform.position, t.midLightRadius);
-        float highLightRadius = Handles.RadiusHandle(Quaternion.identity, t.transform.position, t.highLightRadius);
+        float lowLightRadius = Handles.RadiusHandle(Quaternion.identity, t.floorBelow, t.lowLightRadius);
+        float midLightRadius = Handles.RadiusHandle(Quaternion.identity, t.floorBelow, t.midLightRadius);
+        float highLightRadius = Handles.RadiusHandle(Quaternion.identity, t.floorBelow, t.highLightRadius);
         if(EditorGUI.EndChangeCheck()) {
             Undo.RecordObject(target, "Changed Area Of Effect");
             t.lowLightRadius = lowLightRadius;

@@ -63,6 +63,8 @@ namespace Enemy {
 
         public Config[] config = new Config[4];
 
+        public float[][] awarenessSpeeds = new float[4][];
+
         private void Awake() {
             Chase.visRangeNear = chaseVisRangeNear;
             Chase.visRangeMid = chaseVisRangeMid;
@@ -107,6 +109,11 @@ namespace Enemy {
             Patrol.stoppingDistance = patrolStoppingDistance;
             Patrol.autoBraking = patrolAutoBraking;
             config[3] = Patrol;
+
+            Patrol.awarenessSpeeds[0] = new float[4] { 0f, slowAware, medAware, Mathf.Infinity };
+            awarenessSpeeds[1] = new float[4] { 0f, medAware, fastAware, Mathf.Infinity };
+            awarenessSpeeds[2] = new float[4] { slowAware, medAware, fastAware, Mathf.Infinity };
+            awarenessSpeeds[3] = new float[4] { fastAware, fastAware, Mathf.Infinity, Mathf.Infinity };
         }
     }
 
@@ -120,5 +127,6 @@ namespace Enemy {
         public float acceleration;
         public float stoppingDistance;
         public bool autoBraking;
+        public float[][] awarenessSpeeds;
     }
 }

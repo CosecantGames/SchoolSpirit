@@ -14,6 +14,7 @@ public class VisLight : MonoBehaviour {
     public float lowLightRadius = 15f;
     public float midLightRadius = 8f;
     public float highLightRadius = 5f;
+    public Vector3 floorBelow;
 
     // Start is called before the first frame update
     void Start() {
@@ -47,12 +48,18 @@ public class VisLight : MonoBehaviour {
 
     private void OnDrawGizmosSelected() {
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, lowLightRadius);
+        Gizmos.DrawWireSphere(floorBelow, lowLightRadius);
 
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, midLightRadius);
+        Gizmos.DrawWireSphere(floorBelow, midLightRadius);
 
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, highLightRadius);
+        Gizmos.DrawWireSphere(floorBelow, highLightRadius);
+    }
+
+    private void OnValidate() {
+        Physics.Raycast(transform.position, transform.up * -1, out RaycastHit hit);
+        floorBelow = hit.point;
+        floorBelow.y += 0.1f;
     }
 }

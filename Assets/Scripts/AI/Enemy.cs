@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using static Global;
 
 namespace Enemy {
     public enum EnemyStates {
@@ -68,17 +69,13 @@ namespace Enemy {
         public bool stateSwapped = false;
 
         private void FixedUpdate() {
-            //if(seesPlayer) {
-            //    awareness += Player.Player.visibility * Player.Player.visibility * awarenessRiseScalar *
-            //        (1 - Global.Map(transform.position.flatDistTo(Global.Plr.transform.position), 0f, Look.visRange, 0f, 1f));
-            //} else {
-            //    awareness *= awarenessFallScalar;
-            //    if(awareness < 0.01) {
-            //        awareness = 0f;
-            //    }
-            //}
+            if(playerProximity != -1) {
+                awareness += Time.deltaTime * config.awarenessSpeeds[Player.Player.lightLevel][playerProximity];
+            } else {
+                awareness -= Time.deltaTime;
+            }
 
-            //awareness = Mathf.Clamp(awareness, 0f, 100f);
+            awareness = Mathf.Clamp(awareness, 0f, 100f);
         }
 
         // Update is called once per frame
