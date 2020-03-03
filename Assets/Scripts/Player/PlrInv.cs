@@ -73,6 +73,11 @@ namespace Player {
         public void Drop() {
             if(invIndex != 0) {
                 GameObject obj = inv[invIndex - 1];
+                inv.RemoveAt(invIndex - 1);
+                for(int i = 0; i < inv.Count; i++) {
+                    inv[i].transform.localPosition = new Vector3(4 * (i + 1), 0f, 0f);
+                }
+
                 obj.transform.parent = null;
                 Destroy(obj.GetComponent<SpinObj>());
                 obj.transform.position = Player.Cam.transform.position + (Player.Cam.transform.forward * 2);
@@ -80,9 +85,9 @@ namespace Player {
                 obj.GetComponent<Rigidbody>().useGravity = true;
                 obj.GetComponent<Rigidbody>().isKinematic = false;
 
-                inv.RemoveAt(invIndex - 1);
-
-                invIndex--;
+                if(invIndex > inv.Count) {
+                    invIndex--;
+                }
             } else {
                 Debug.Log("Not holding anything");
             }
