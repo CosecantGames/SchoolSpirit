@@ -166,7 +166,7 @@ InputManager:
     axis: 1
     joyNum: 0
   - serializedVersion: 3
-    m_Name: Mouse ScrollWheel
+    m_Name: Scroll
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: 
@@ -177,7 +177,7 @@ InputManager:
     dead: 0
     sensitivity: 0.1
     snap: 0
-    invert: 0
+    invert: 1
     type: 1
     axis: 2
     joyNum: 0

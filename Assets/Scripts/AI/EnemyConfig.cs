@@ -5,10 +5,10 @@ using UnityEngine;
 namespace Enemy {
     public class EnemyConfig : MonoBehaviour {
         [Header("Chasing")]
-        public float chaseVisRangeNear = 1f;
+        public float chaseVisRangeNear = 4f;
         public float chaseVisRangeMid = 15f;
         public float chaseVisRangeFar = 30f;
-        public float chaseVisAngle = 30f;
+        public float chaseVisAngle = 50f;
         [Space(5)]
         public float chaseSpeed = 6f;
         public float chaseAngularSpeed = 450f;
@@ -18,10 +18,10 @@ namespace Enemy {
         public Config Chase = new Config();
 
         [Header("Searching")]
-        public float searchVisRangeNear = 2f;
+        public float searchVisRangeNear = 4f;
         public float searchVisRangeMid = 8f;
         public float searchVisRangeFar = 25f;
-        public float searchVisAngle = 50f;
+        public float searchVisAngle = 120f;
         [Space(5)]
         public float searchSpeed = 4f;
         public float searchAngularSpeed = 300f;
@@ -31,9 +31,9 @@ namespace Enemy {
         public Config Search = new Config();
 
         [Header("Looking")]
-        public float lookVisRangeNear = 1f;
-        public float lookVisRangeMid = 20f;
-        public float lookVisRangeFar = 40f;
+        public float lookVisRangeNear = 5f;
+        public float lookVisRangeMid = 15f;
+        public float lookVisRangeFar = 30f;
         public float lookVisAngle = 150f;
         [Space(5)]
         public float lookSpeed = 0f;
@@ -44,10 +44,10 @@ namespace Enemy {
         public Config Look = new Config();
 
         [Header("Patrolling")]
-        public float patrolVisRangeNear = 1f;
-        public float patrolVisRangeMid = 15f;
-        public float patrolVisRangeFar = 30f;
-        public float patrolVisAngle = 40f;
+        public float patrolVisRangeNear = 3f;
+        public float patrolVisRangeMid = 10f;
+        public float patrolVisRangeFar = 20f;
+        public float patrolVisAngle = 90f;
         [Space(5)]
         public float patrolSpeed = 4.5f;
         public float patrolAngularSpeed = 450f;
@@ -57,9 +57,9 @@ namespace Enemy {
         public Config Patrol = new Config();
 
         [Header("Awareness Speeds")]
-        public float slowAware = 1f;
-        public float medAware = 3f;
-        public float fastAware = 5f;
+        public float slowAware = 0.3f;
+        public float medAware = 0.75f;
+        public float fastAware = 1f;
 
         public Config[] config = new Config[4];
 
@@ -75,6 +75,12 @@ namespace Enemy {
             Chase.acceleration = chaseAcceleration;
             Chase.stoppingDistance = chaseStoppingDistance;
             Chase.autoBraking = chaseAutoBraking;
+
+            Chase.awarenessSpeeds = new float[4][];
+            Chase.awarenessSpeeds[0] = new float[4] { 0f, slowAware, medAware, Mathf.Infinity };
+            Chase.awarenessSpeeds[1] = new float[4] { 0f, medAware, fastAware, Mathf.Infinity };
+            Chase.awarenessSpeeds[2] = new float[4] { slowAware, medAware, fastAware, Mathf.Infinity };
+            Chase.awarenessSpeeds[3] = new float[4] { fastAware, fastAware, Mathf.Infinity, Mathf.Infinity };
             config[0] = Chase;
 
             Search.visRangeNear = searchVisRangeNear;
@@ -86,6 +92,12 @@ namespace Enemy {
             Search.acceleration = searchAcceleration;
             Search.stoppingDistance = searchStoppingDistance;
             Search.autoBraking = searchAutoBraking;
+
+            Search.awarenessSpeeds = new float[4][];
+            Search.awarenessSpeeds[0] = new float[4] { 0f, slowAware, medAware, Mathf.Infinity };
+            Search.awarenessSpeeds[1] = new float[4] { 0f, medAware, fastAware, Mathf.Infinity };
+            Search.awarenessSpeeds[2] = new float[4] { slowAware, medAware, fastAware, Mathf.Infinity };
+            Search.awarenessSpeeds[3] = new float[4] { fastAware, fastAware, Mathf.Infinity, Mathf.Infinity };
             config[1] = Search;
 
             Look.visRangeNear = lookVisRangeNear;
@@ -97,6 +109,12 @@ namespace Enemy {
             Look.acceleration = lookAcceleration;
             Look.stoppingDistance = lookStoppingDistance;
             Look.autoBraking = lookAutoBraking;
+
+            Look.awarenessSpeeds = new float[4][];
+            Look.awarenessSpeeds[0] = new float[4] { medAware, fastAware, Mathf.Infinity, Mathf.Infinity };
+            Look.awarenessSpeeds[1] = new float[4] { fastAware, fastAware, Mathf.Infinity, Mathf.Infinity };
+            Look.awarenessSpeeds[2] = new float[4] { fastAware, Mathf.Infinity, Mathf.Infinity, Mathf.Infinity };
+            Look.awarenessSpeeds[3] = new float[4] { Mathf.Infinity, Mathf.Infinity, Mathf.Infinity, Mathf.Infinity };
             config[2] = Look;
 
             Patrol.visRangeNear = patrolVisRangeNear;
@@ -108,12 +126,13 @@ namespace Enemy {
             Patrol.acceleration = patrolAcceleration;
             Patrol.stoppingDistance = patrolStoppingDistance;
             Patrol.autoBraking = patrolAutoBraking;
-            config[3] = Patrol;
 
+            Patrol.awarenessSpeeds = new float[4][];
             Patrol.awarenessSpeeds[0] = new float[4] { 0f, slowAware, medAware, Mathf.Infinity };
-            awarenessSpeeds[1] = new float[4] { 0f, medAware, fastAware, Mathf.Infinity };
-            awarenessSpeeds[2] = new float[4] { slowAware, medAware, fastAware, Mathf.Infinity };
-            awarenessSpeeds[3] = new float[4] { fastAware, fastAware, Mathf.Infinity, Mathf.Infinity };
+            Patrol.awarenessSpeeds[1] = new float[4] { 0f, medAware, fastAware, Mathf.Infinity };
+            Patrol.awarenessSpeeds[2] = new float[4] { slowAware, medAware, fastAware, Mathf.Infinity };
+            Patrol.awarenessSpeeds[3] = new float[4] { fastAware, fastAware, Mathf.Infinity, Mathf.Infinity };
+            config[3] = Patrol;
         }
     }
 

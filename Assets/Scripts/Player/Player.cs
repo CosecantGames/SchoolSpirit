@@ -16,6 +16,8 @@ namespace Player {
         public static PlrMove Move;
         public static Camera Cam;
         public static PlrUse Use;
+        public static PlrInv Inv;
+
         public static SphereCollider Head;
 
         public static int lightLevel = 0;
@@ -27,6 +29,7 @@ namespace Player {
             Cam = GetComponentInChildren<Camera>();
             Move = GetComponent<PlrMove>();
             Use = GetComponent<PlrUse>();
+            Inv = GetComponent<PlrInv>();
 
             Head = GetComponentInChildren<SphereCollider>();
         }

@@ -10,8 +10,6 @@ namespace Enemy {
         public bool showVis = false;
         public bool logAngle = false;
 
-        public float visRange = 16f;
-        public float visAngle = 30f;
         public Vector3 vectorToPlr = Vector3.zero;
 
         public float angleToPlr;
@@ -36,23 +34,19 @@ namespace Enemy {
         }
 
         public void LookForPlayer() {
-            bool inVisCone = angleToPlr <= visAngle / 2;
+            bool inVisCone = angleToPlr <= me.config.visAngle / 2;
             me.hasLineOfSight = me.sees(Global.Plr) && inVisCone;
 
-            if(me.hasLineOfSight) {
-                Physics.Raycast(transform.position, Global.Plr.transform.position - transform.position, out RaycastHit hit);
+            Physics.Raycast(transform.position, Global.Plr.transform.position - transform.position, out RaycastHit hit);
 
-                if(hit.distance < me.config.visRangeNear) {
-                    playerProximity = 3;
-                } else if(hit.distance < me.config.visRangeMid) {
-                    playerProximity = 2;
-                } else if(hit.distance < me.config.visRangeFar) {
-                    playerProximity = 1;
-                } else {
-                    playerProximity = 0;
-                }
+            if(hit.distance < me.config.visRangeNear) {
+                playerProximity = 3;
+            } else if(hit.distance < me.config.visRangeMid) {
+                playerProximity = 2;
+            } else if(hit.distance < me.config.visRangeFar) {
+                playerProximity = 1;
             } else {
-                playerProximity = -1;
+                playerProximity = 0;
             }
 
             me.playerProximity = playerProximity;
@@ -62,9 +56,9 @@ namespace Enemy {
             if(showVis) {
                 vectorToPlr = Global.Plr.transform.position - transform.position;
 
-                Vector3 fwdBound = transform.forward * visRange;
-                Vector3 leftBound = Quaternion.Euler(0f, visAngle / -2, 0f) * fwdBound;
-                Vector3 rightBound = Quaternion.Euler(0f, visAngle / 2, 0f) * fwdBound;
+                Vector3 fwdBound = transform.forward * me.config.visRangeFar;
+                Vector3 leftBound = Quaternion.Euler(0f, me.config.visAngle / -2, 0f) * fwdBound;
+                Vector3 rightBound = Quaternion.Euler(0f, me.config.visAngle / 2, 0f) * fwdBound;
 
                 Gizmos.color = Color.green;
                 Gizmos.DrawLine(transform.position, transform.position + fwdBound);

@@ -38,7 +38,6 @@ namespace Enemy {
         [Space(6)]
         public bool ignorePlayer = false;
         public bool hasLineOfSight = false;
-        public bool seesPlayer = false;
 
         [Header("Alert Speed Stuff")]
         public int playerProximity;
@@ -65,14 +64,19 @@ namespace Enemy {
             lastState = nextState;
         }
 
+        private void Start() {
+            config = Configs.Patrol;
+        }
+
         public float stateTimer;
         public bool stateSwapped = false;
 
         private void FixedUpdate() {
-            if(playerProximity != -1) {
-                awareness += Time.deltaTime * config.awarenessSpeeds[Player.Player.lightLevel][playerProximity];
+            if(hasLineOfSight) {
+                awareness += config.awarenessSpeeds[Player.Player.lightLevel][playerProximity];
             } else {
-                awareness -= Time.deltaTime;
+                awareness *= awarenessFallScalar;
+                if(awareness <= 0.001) { awareness = 0; }
             }
 
             awareness = Mathf.Clamp(awareness, 0f, 100f);
@@ -131,11 +135,11 @@ namespace Enemy {
         }
 
         public void SwapAgent(NavMeshAgent newAgent) {
-            agent.speed = newAgent.speed;
-            agent.angularSpeed = newAgent.angularSpeed;
-            agent.acceleration = newAgent.acceleration;
-            agent.stoppingDistance = newAgent.stoppingDistance;
-            agent.autoBraking = newAgent.autoBraking;
+            agent.speed = config.speed;
+            agent.angularSpeed = config.angularSpeed;
+            agent.acceleration = config.acceleration;
+            agent.stoppingDistance = config.stoppingDistance;
+            agent.autoBraking = config.autoBraking;
         }
 
         public float chaseTimer = 0f;
@@ -152,7 +156,7 @@ namespace Enemy {
                     SwapAgent(EnemyAgents.chaseAgent);
                     config = Configs.Chase;
 
-                    Routines.lookAtPlayer.Run(45f);
+                    //Routines.lookAtPlayer.Run(45f);
 
                     break;
                 case EnemyStates.Searching:

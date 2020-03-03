@@ -18,14 +18,14 @@ namespace Enemy {
                 me.stateSwapped = false;
 
                 me.chaseTimer = 0f;
-                me.Routines.lookAtPlayer.Run(30f);
+                //me.Routines.lookAtPlayer.Run(30f);
             }
 
             target = Global.Plr.transform;
             me.agent.destination = target.position;
             me.chaseTimer += Time.deltaTime;
 
-            if(!me.seesPlayer) {
+            if(!me.hasLineOfSight) {
                 me.Routines.lookAtPlayer.Kill();
                 me.SwapState(EnemyStates.Searching, me.chaseTimer * 2);
             }

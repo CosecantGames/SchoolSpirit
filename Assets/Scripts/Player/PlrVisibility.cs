@@ -10,11 +10,13 @@ namespace Player {
 
         public Player player;
         public Enemy.Enemy enemy;
+        public Enemy.Enemy enemyB;
         public TextMeshProUGUI visMeter;
 
         private void Awake() {
             player = GetComponent<Player>();
             enemy = GameObject.Find("Enemy").GetComponent<Enemy.Enemy>();
+            enemyB = GameObject.Find("Enemy (1)").GetComponent<Enemy.Enemy>();
         }
 
         // Start is called before the first frame update
@@ -26,7 +28,7 @@ namespace Player {
         void Update() {
             //FindLights();
             CalcLights();
-            visMeter.text = "Light level: " + Player.lightLevel + "\nEnemy Proximity: " + enemy.playerProximity + "\nAwareness: " + enemy.awareness;
+            visMeter.text = "Light level: " + Player.lightLevel + "\nEnemy A Proximity: " + enemy.playerProximity + "\nA's Awareness: " + enemy.awareness + "\nEnemy B Proximity: " + enemyB.playerProximity + "\nB's Awareness: " + enemyB.awareness;
         }
 
         void CalcLights() {
@@ -70,19 +72,5 @@ namespace Player {
         //        }
         //    }
         //}
-
-        void SeeTest() {
-            hitList.Clear();
-            Debug.Log(this.sees(target));
-            RaycastHit[] hits = Physics.RaycastAll(
-                transform.position,
-                target.transform.position - transform.position,
-                (target.transform.position - transform.position).magnitude,
-                ~6148);
-
-            foreach(RaycastHit hit in hits) {
-                hitList.Add(hit.transform.gameObject);
-            }
-        }
     }
 }
