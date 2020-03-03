@@ -7,10 +7,15 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2909864486301549623, guid: 83d5a15e5901e514693d038c365737d4,
+        type: 3}
+      propertyPath: reverseDirection
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3509687127721055965, guid: 83d5a15e5901e514693d038c365737d4,
         type: 3}
       propertyPath: m_Name
-      value: Side Windows (Setup A) and No Lockers
+      value: Side Windows (Setup A) and No Lockers (Flipped)
       objectReference: {fileID: 0}
     - target: {fileID: 3509687127721055966, guid: 83d5a15e5901e514693d038c365737d4,
         type: 3}

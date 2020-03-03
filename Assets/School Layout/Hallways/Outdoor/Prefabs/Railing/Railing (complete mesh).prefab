@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6222742074307936313}
   - component: {fileID: 2010725227474917368}
   - component: {fileID: 1416391077647976073}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Railing (complete mesh)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

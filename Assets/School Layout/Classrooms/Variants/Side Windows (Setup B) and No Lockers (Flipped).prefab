@@ -70,7 +70,12 @@ PrefabInstance:
     - target: {fileID: 5515036762696576658, guid: 7960613259456db4cb3f86e758fbcc56,
         type: 3}
       propertyPath: m_Name
-      value: Side Windows (Setup B) and No Lockers
+      value: Side Windows (Setup B) and No Lockers (Flipped)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5965585149578655490, guid: 7960613259456db4cb3f86e758fbcc56,
+        type: 3}
+      propertyPath: reverseDirection
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7960613259456db4cb3f86e758fbcc56, type: 3}

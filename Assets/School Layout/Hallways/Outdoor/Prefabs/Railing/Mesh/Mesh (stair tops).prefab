@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5073911179993203506}
   - component: {fileID: 3347198051695311419}
   - component: {fileID: 8374631112792604432}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Mesh (stair tops)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

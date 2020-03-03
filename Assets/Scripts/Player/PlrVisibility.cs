@@ -15,8 +15,8 @@ namespace Player {
 
         private void Awake() {
             player = GetComponent<Player>();
-            enemy = GameObject.Find("Enemy").GetComponent<Enemy.Enemy>();
-            enemyB = GameObject.Find("Enemy (1)").GetComponent<Enemy.Enemy>();
+            //enemy = GameObject.Find("Enemy").GetComponent<Enemy.Enemy>();
+            //enemyB = GameObject.Find("Enemy (1)").GetComponent<Enemy.Enemy>();
         }
 
         // Start is called before the first frame update
@@ -28,7 +28,7 @@ namespace Player {
         void Update() {
             //FindLights();
             CalcLights();
-            visMeter.text = "Light level: " + Player.lightLevel + "\nEnemy A Proximity: " + enemy.playerProximity + "\nA's Awareness: " + enemy.awareness + "\nEnemy B Proximity: " + enemyB.playerProximity + "\nB's Awareness: " + enemyB.awareness;
+            //visMeter.text = "Light level: " + Player.lightLevel + "\nEnemy A Proximity: " + enemy.playerProximity + "\nA's Awareness: " + enemy.awareness + "\nEnemy B Proximity: " + enemyB.playerProximity + "\nB's Awareness: " + enemyB.awareness;
         }
 
         void CalcLights() {

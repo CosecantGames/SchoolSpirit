@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7735582898836661169}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Open Straight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27,9 +27,9 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 9143586436011186902}
-  - {fileID: 4033099500825515661}
   - {fileID: 448265845046972562}
+  - {fileID: 4033099500825515661}
+  - {fileID: 9143586436011186902}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -44,6 +44,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Floor
+      objectReference: {fileID: 0}
+    - target: {fileID: 4935011250506460194, guid: 0a88475b455bb5549a133db5da7531cc,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6703257080941140668, guid: 0a88475b455bb5549a133db5da7531cc,
         type: 3}
@@ -83,7 +88,7 @@ PrefabInstance:
     - target: {fileID: 6703257080941140668, guid: 0a88475b455bb5549a133db5da7531cc,
         type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6703257080941140668, guid: 0a88475b455bb5549a133db5da7531cc,
         type: 3}
@@ -115,10 +120,20 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7735582898836661169}
     m_Modifications:
+    - target: {fileID: 158451501147938770, guid: e1a64574db4d7b64b866b7681024d62c,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2043660477003499867, guid: e1a64574db4d7b64b866b7681024d62c,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 5005030242241992066, guid: e1a64574db4d7b64b866b7681024d62c,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5005030242241992066, guid: e1a64574db4d7b64b866b7681024d62c,
         type: 3}
@@ -153,7 +168,7 @@ PrefabInstance:
     - target: {fileID: 5005030242241992066, guid: e1a64574db4d7b64b866b7681024d62c,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5005030242241992066, guid: e1a64574db4d7b64b866b7681024d62c,
         type: 3}
@@ -175,6 +190,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Roof
       objectReference: {fileID: 0}
+    - target: {fileID: 8398324824773517040, guid: e1a64574db4d7b64b866b7681024d62c,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e1a64574db4d7b64b866b7681024d62c, type: 3}
 --- !u!4 &448265845046972562 stripped
@@ -194,6 +214,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Railing (continuous mesh)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1990331849031353079, guid: 78203d0bb6ca8dd4ab45a30df3944e57,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8129813339843225166, guid: 78203d0bb6ca8dd4ab45a30df3944e57,
         type: 3}

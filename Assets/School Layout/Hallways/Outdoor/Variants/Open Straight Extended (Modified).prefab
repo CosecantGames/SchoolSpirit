@@ -15,12 +15,12 @@ PrefabInstance:
     - target: {fileID: 6691455868422337659, guid: 3a218c7388b35684b8aa6a47a85e324f,
         type: 3}
       propertyPath: m_Name
-      value: Open Straight Extended
+      value: Open Straight Extended (Modified)
       objectReference: {fileID: 0}
     - target: {fileID: 7676256304525133416, guid: 3a218c7388b35684b8aa6a47a85e324f,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 34
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7676256304525133416, guid: 3a218c7388b35684b8aa6a47a85e324f,
         type: 3}
