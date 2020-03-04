@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Global;
 
 public class OpenDoor : MonoBehaviour {
     public enum OpenAxis {
@@ -9,11 +10,17 @@ public class OpenDoor : MonoBehaviour {
         Z
     }
 
+    [Header("Options")]
     public bool reverseDirection = false;
-    public bool isOpen = false;
+    public OpenAxis openAxis = OpenAxis.Y;
     public float openAngle = 100;
     public float openSpeed = 5f;
-    public OpenAxis openAxis = OpenAxis.Y;
+
+    [Space(8)]
+    public bool isOpen = false;
+    public bool isLocked = false;
+    public GameObject key;
+
     Quaternion closeRot;
     Quaternion openRot;
     Quaternion targetRot;
@@ -46,7 +53,14 @@ public class OpenDoor : MonoBehaviour {
     }
 
     public void Use() {
-        Debug.Log("Used door");
-        isOpen = !isOpen;
+        if(Player.Player.Inv.HeldItem == key) {
+            isLocked = !isLocked;
+        }
+
+        if(isLocked) {
+            isOpen = false;
+        } else {
+            isOpen = !isOpen;
+        }
     }
 }

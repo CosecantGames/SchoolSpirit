@@ -4,12 +4,14 @@ using UnityEngine;
 
 namespace Player {
     public class PlrInv : MonoBehaviour {
+        //-1 = no item
         public int invIndex;
         public GameObject invObj;
         public Camera invCam;
         public List<GameObject> inv = new List<GameObject>();
         public float moveSpeed = 2f;
-        public GameObject heldItem;
+        public float invSpinSpeed = 1f;
+        GameObject heldItem;
 
         // Start is called before the first frame update
         void Start() {
@@ -26,21 +28,21 @@ namespace Player {
 
         // Update is called once per frame
         void Update() {
+            if(Input.GetKeyDown(KeyCode.U)) {
+                SetItemPositions();
+            }
+
             float scrollInput = Input.GetAxisRaw("Scroll");
 
             if(scrollInput > 0) {
-                if(invIndex < inv.Count) {
+                if(invIndex < inv.Count - 1) {
                     invIndex++;
-                    heldItem = inv[invIndex - 1];
                 }
             }
 
             if(scrollInput < 0) {
-                if(invIndex > 0) {
+                if(invIndex >= 0) {
                     invIndex--;
-                    if(invIndex > 0) {
-                        heldItem = inv[invIndex - 1];
-                    }
                 }
             }
 
@@ -51,6 +53,10 @@ namespace Player {
             invCam.transform.localPosition = Vector3.MoveTowards(invCam.transform.localPosition, new Vector3(invIndex * 4, 0, -5f), moveSpeed);
         }
 
+        public GameObject HeldItem {
+            get => invIndex == -1 ? null : inv[invIndex];
+        }
+
         public void Add(GameObject obj) {
             inv.Add(obj);
             obj.GetComponent<Rigidbody>().useGravity = false;
@@ -58,12 +64,10 @@ namespace Player {
 
             obj.transform.parent = invObj.transform;
 
-            obj.transform.position = Vector3.zero;
-            obj.transform.localPosition = new Vector3(inv.Count * 4, 0f, 0f);
-            obj.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-            obj.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
+            SetItemPositions();
 
-            obj.AddComponent<SpinObj>();
+            SpinObj spinObj = obj.AddComponent<SpinObj>();
+            spinObj.speed = invSpinSpeed;
         }
 
         public void Hold() {
@@ -71,12 +75,10 @@ namespace Player {
         }
 
         public void Drop() {
-            if(invIndex != 0) {
-                GameObject obj = inv[invIndex - 1];
-                inv.RemoveAt(invIndex - 1);
-                for(int i = 0; i < inv.Count; i++) {
-                    inv[i].transform.localPosition = new Vector3(4 * (i + 1), 0f, 0f);
-                }
+            if(invIndex >= 0) {
+                GameObject obj = inv[invIndex];
+                inv.RemoveAt(invIndex);
+                SetItemPositions();
 
                 obj.transform.parent = null;
                 Destroy(obj.GetComponent<SpinObj>());
@@ -85,11 +87,18 @@ namespace Player {
                 obj.GetComponent<Rigidbody>().useGravity = true;
                 obj.GetComponent<Rigidbody>().isKinematic = false;
 
-                if(invIndex > inv.Count) {
+                if(invIndex > inv.Count - 1) {
                     invIndex--;
                 }
             } else {
                 Debug.Log("Not holding anything");
+            }
+        }
+
+        void SetItemPositions() {
+            for(int i = 0; i < inv.Count; i++) {
+                inv[i].transform.localPosition = inv[i].GetComponent<PickupItem>().invPosition + new Vector3(4 * i, 0f, 0f);
+                inv[i].transform.eulerAngles = inv[i].GetComponent<PickupItem>().invRotation;
             }
         }
     }
