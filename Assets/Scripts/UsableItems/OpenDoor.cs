@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Global;
+using UnityEngine.AI;
 
 public class OpenDoor : MonoBehaviour {
     public enum OpenAxis {
@@ -18,8 +18,21 @@ public class OpenDoor : MonoBehaviour {
 
     [Space(8)]
     public bool isOpen = false;
-    public bool isLocked = false;
+    //locked is for setting its initial value and testing w/ inspector. isLocked should be used during runtime.
+    public bool locked = false;
     public GameObject key;
+
+    private bool isLocked = false;
+    public bool IsLocked {
+        get { return isLocked; }
+        set {
+            isLocked = value;
+            SetObstacle();
+        }
+    }
+
+    public float closeTimer = 0f;
+    public bool autoClose = false;
 
     Quaternion closeRot;
     Quaternion openRot;
@@ -28,6 +41,9 @@ public class OpenDoor : MonoBehaviour {
     private void Awake() {
         closeRot = transform.rotation;
         openRot = closeRot;
+
+        IsLocked = locked;
+        GetComponent<NavMeshObstacle>().enabled = IsLocked;
 
         switch(openAxis) {
             case OpenAxis.X:
@@ -44,17 +60,23 @@ public class OpenDoor : MonoBehaviour {
 
     private void Update() {
         targetRot = isOpen ? openRot : closeRot;
-
         transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, openSpeed);
-    }
 
-    private void OnCollisionEnter(Collision collision) {
-        Debug.Log("Hit " + collision.gameObject.name);
+        //if(autoClose) {
+        //    if(isOpen) {
+        //        closeTimer -= Time.deltaTime;
+        //    }
+
+        //    if(closeTimer <= 0) {
+        //        isOpen = false;
+        //        autoClose = false;
+        //    }
+        //}
     }
 
     public void Use() {
         if(Player.Player.Inv.HeldItem == key) {
-            isLocked = !isLocked;
+            IsLocked = !IsLocked;
         }
 
         if(isLocked) {
@@ -62,5 +84,13 @@ public class OpenDoor : MonoBehaviour {
         } else {
             isOpen = !isOpen;
         }
+    }
+
+    public void SetObstacle() {
+        GetComponent<NavMeshObstacle>().enabled = IsLocked;
+    }
+
+    private void OnValidate() {
+        IsLocked = locked;
     }
 }

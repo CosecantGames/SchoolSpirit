@@ -1,9 +1,8 @@
 fileFormatVersion: 2
-guid: ec0146446a5098044ab2fa432a1e34a0
-labels:
-- Door
-PrefabImporter:
+guid: c00b80683155a5746806a0cf9361f089
+NativeFormatImporter:
   externalObjects: {}
+  mainObjectFileID: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 

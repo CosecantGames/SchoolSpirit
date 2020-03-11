@@ -8,6 +8,11 @@ TagManager:
   - Node
   - Wall
   - Light
+  - Door
+  - Enemy
+  - NearLight
+  - MidLight
+  - FarLight
   layers:
   - Default
   - TransparentFX

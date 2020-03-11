@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 4cfd5035e076bdc46846e145079ca483
 ModelImporter:
-  serializedVersion: 26
+  serializedVersion: 19300
   internalIDToNameTable: []
   externalObjects:
   - first:
@@ -15,7 +15,7 @@ ModelImporter:
       name: Floor
     second: {fileID: 2100000, guid: 2846fa5b2322bbb4f88ec05d81ee5848, type: 2}
   materials:
-    importMaterials: 1
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -54,7 +54,7 @@ ModelImporter:
     importCameras: 0
     importLights: 0
     swapUVChannels: 0
-    generateSecondaryUV: 0
+    generateSecondaryUV: 1
     useFileUnits: 1
     keepQuads: 0
     weldVertices: 1
@@ -79,7 +79,6 @@ ModelImporter:
     normalSmoothingSource: 0
   referencedClips: []
   importAnimation: 0
-  copyAvatar: 0
   humanDescription:
     serializedVersion: 3
     human: []
@@ -97,8 +96,10 @@ ModelImporter:
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 0
   humanoidOversampling: 1
+  avatarSetup: 0
   additionalBone: 0
   userData: 
   assetBundleName: 

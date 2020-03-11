@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 330c5cb146a80f949a1e610ef5d1c95a
 ModelImporter:
-  serializedVersion: 26
+  serializedVersion: 19300
   internalIDToNameTable: []
   externalObjects:
   - first:
@@ -25,7 +25,7 @@ ModelImporter:
       name: Side Walk
     second: {fileID: 2100000, guid: 2158e4afa5e6c70409c98554071a004e, type: 2}
   materials:
-    importMaterials: 1
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -64,7 +64,7 @@ ModelImporter:
     importCameras: 0
     importLights: 0
     swapUVChannels: 0
-    generateSecondaryUV: 0
+    generateSecondaryUV: 1
     useFileUnits: 1
     keepQuads: 0
     weldVertices: 1
@@ -89,7 +89,6 @@ ModelImporter:
     normalSmoothingSource: 3
   referencedClips: []
   importAnimation: 0
-  copyAvatar: 0
   humanDescription:
     serializedVersion: 3
     human: []
@@ -107,8 +106,10 @@ ModelImporter:
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 0
   humanoidOversampling: 1
+  avatarSetup: 0
   additionalBone: 0
   userData: 
   assetBundleName: 
