@@ -28,16 +28,32 @@ namespace Player {
         void Update() {
             //FindLights();
             CalcLights();
-            //visMeter.text = "Light level: " + Player.lightLevel + "\nEnemy A Proximity: " + enemy.playerProximity + "\nA's Awareness: " + enemy.awareness + "\nEnemy B Proximity: " + enemyB.playerProximity + "\nB's Awareness: " + enemyB.awareness;
+            visMeter.text = "Light level: " + Player.lightLevel;
         }
 
         void CalcLights() {
             int lightLevel = 0;
 
-            foreach(VisLight light in Global.lightScripts) {
-                if(light.seesPlayer) {
-                    int lightIndex = light.PlayerLightingIndex();
+            foreach(StealthLight light in Global.lights) {
+                if(light.sees(player)) {
+                    light.seesPlayer = true;
+
+                    float distToLight = (light.transform.position - transform.position).magnitude;
+                    int lightIndex;
+
+                    if(distToLight < light.rNear) {
+                        lightIndex = 3;
+                    } else if(distToLight < light.rMid) {
+                        lightIndex = 2;
+                    } else if(distToLight < light.rFar) {
+                        lightIndex = 1;
+                    } else {
+                        lightIndex = 0;
+                    }
+
                     lightLevel = lightIndex > lightLevel ? lightIndex : lightLevel;
+                } else {
+                    light.seesPlayer = false;
                 }
             }
 

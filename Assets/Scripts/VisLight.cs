@@ -11,10 +11,14 @@ public class VisLight : MonoBehaviour {
 
     public bool seesPlayer;
 
-    public float lowLightRadius = 15f;
-    public float midLightRadius = 8f;
-    public float highLightRadius = 5f;
+    public float rNear = 3f;
+    public float rMid = 8f;
+    public float rFar = 12f;
+
+    public bool useFloorBelow = false;
     public Vector3 floorBelow;
+
+    public Vector3 anchorPoint;
 
     // Start is called before the first frame update
     void Start() {
@@ -27,19 +31,17 @@ public class VisLight : MonoBehaviour {
     }
 
     public int PlayerLightingIndex() {
-        float visOnPlayer = 0f;
-
         if(useFlatDist) {
             distToPlr = transform.position.flatDistTo(Plr.transform.position);
         } else {
             distToPlr = (transform.position - Plr.transform.position).magnitude;
         }
 
-        if(distToPlr < highLightRadius) {
+        if(distToPlr < rNear) {
             return 3;
-        } else if(distToPlr < midLightRadius) {
+        } else if(distToPlr < rMid) {
             return 2;
-        } else if(distToPlr < lowLightRadius) {
+        } else if(distToPlr < rFar) {
             return 1;
         } else {
             return 0;
@@ -47,17 +49,24 @@ public class VisLight : MonoBehaviour {
     }
 
     private void OnDrawGizmosSelected() {
+        anchorPoint = useFloorBelow ? floorBelow : transform.position;
+
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(floorBelow, lowLightRadius);
+        Gizmos.DrawWireSphere(anchorPoint, rFar);
 
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(floorBelow, midLightRadius);
+        Gizmos.DrawWireSphere(anchorPoint, rMid);
 
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(floorBelow, highLightRadius);
+        Gizmos.DrawWireSphere(anchorPoint, rNear);
     }
 
     private void OnValidate() {
+        FindFloorBelow();
+        rFar = GetComponent<Light>().range;
+    }
+
+    public void FindFloorBelow() {
         Physics.Raycast(transform.position, transform.up * -1, out RaycastHit hit);
         floorBelow = hit.point;
         floorBelow.y += 0.1f;
